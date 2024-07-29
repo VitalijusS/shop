@@ -1,47 +1,79 @@
+import { PageContactUs } from "./PageContactUs.js";
+import { PageHome } from "./PageHome.js";
+import { PageServices } from "./PageServices.js";
+import { PageTeam } from "./PageTeam.js";
+
 export class Layout {
-    constructor() { }
+    constructor() {
+        this.pagesData = [
+            {
+                text: 'Home',
+                content: PageHome,
+                backgroud: 'white',
+            },
+            {
+                text: 'Services',
+                content: PageServices,
+                backgroud: 'pink',
+            },
+            {
+                text: 'Team',
+                backgroud: 'wheat',
+                content: PageTeam,
+            },
+            {
+                backgroud: 'grey',
+                text: 'Contact us',
+                content: PageContactUs,
+            },
+        ];
+        this.render()
+    }
 
     header() {
-        const HTML = `
-            <header class="container">
+
+        let navHTML = '';
+        for (const link of this.pagesData) {
+            navHTML += `<button class="link">${link.text}</button>`
+        }
+        return `
+            <header class="container main-header">
                 <div class="row">
-                    <div class="col-12">
-                        <img src="#" alt="Logo">
-                        <nav>
-                            <a href="./">Home</a>
-                            <a href="./services">Services</a>
-                            <a href="./team">Team</a>
-                            <a href="./contact-us">Contact us</a>
+                    <div class="col-12 main-header-contnet">
+                        <img class="logo" src="./img/icon.ico" alt="Logo">
+                        <nav class="hidden visible-sm-flex main-nav">
+                            ${navHTML}
                         </nav>
                     <div>
                 <div>
             </header>`;
-        return HTML;
     }
+
+    headerEvents() {
+        const buttonsDOM = document.querySelectorAll('.main-header-contnet .link');
+        const mainDOM = document.querySelector('main.container')
+        const titleDOM = document.querySelector('head title')
+        for (let i = 0; i < buttonsDOM.length; i++) {
+            const buttonDOM = buttonsDOM[i];
+            buttonsDOM[i].addEventListener('click', () => {
+                mainDOM.innerHTML = (new (this.pagesData[i].content)).render()
+                document.body.style.background = this.pagesData[i].backgroud;
+                titleDOM.textContent = this.pagesData[i].text;
+            })
+        }
+    }
+
     main() {
+
         const HTML = `
             <main class="container">
-                <section class="row">
-                    <h1 class="col-12 main-title">Pirmas posukis</h1>
-                </section>
-                <section class="row">
-                    <div class="col-10 col-sm-8 col-md-6 col-lg-4 col-xl-2 col-xxl-1" style="background: yellow;">A</div>
-                    <div class="col-1 m-1 m-sm-3 col-md-2 m-md-4 col-lg-4 m-xl-6 col-xxl-1 m-xxl-10" style="background: orange;">B</div>
-                </section>
-                <section class="row">
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3 col-xxl-12">Pirmas posukis</div>
-                    <div class="col-12 col-sm-6 col-lg-4 col-xl-3">Pirmas posukis</div>
-                    <div class="col-6 col-lg-4 col-xl-3">Pirmas posukis</div>
-                    <div class="col-6 col-lg-4 col-xl-3">Pirmas posukis</div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-1">Pirmas posukis</div>
-                    <div class="col-12 col-md-6 col-lg-4 col-xl-3 col-xxl-2">Pirmas posukis</div>
-                </section>
+            ${(new PageHome).render()}
             </main>`;
         return HTML;
     }
 
     footer() {
-        const HTML = '<footer class="container">&copy; Copyright 2024</footer>';;
+        const HTML = '<footer class="container">&copy; Copyright 2024</footer>';
         return HTML;
     }
 
@@ -50,5 +82,6 @@ export class Layout {
         const DOM = document.getElementById('app');
 
         DOM.insertAdjacentHTML('beforeend', HTML);
+        this.headerEvents()
     }
 }

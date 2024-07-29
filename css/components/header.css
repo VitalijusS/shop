@@ -1,0 +1,25 @@
+.main-header {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+.main-header .main-header-contnet {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.main-header .logo {
+    height: 3rem;
+}
+.main-header .main-nav {
+    display: flex;
+    gap: 2rem;
+}
+.main-header button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+.main-header button:hover {
+    color: blue;
+}
