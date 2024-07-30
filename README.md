@@ -27,6 +27,11 @@ Site published at: https://vitalijuss.github.io/shop/
     -   [x] main content
     -   [x] footer
 -   [x] navigation between pages
+-   [ ] product CRUD:
+    -   [ ] list
+    -   [ ] add
+    -   [ ] remove
+    -   [ ] update
 
 ## 🎅 Authors
 

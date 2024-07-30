@@ -1,6 +1,8 @@
 import { PageContactUs } from "./PageContactUs.js";
 import { PageHome } from "./PageHome.js";
 import { PageServices } from "./PageServices.js";
+import { PageShopAddNew } from "./PageShopAddNew.js";
+import { PageShopList } from "./PageShopList.js";
 import { PageTeam } from "./PageTeam.js";
 
 export class Layout {
@@ -10,6 +12,11 @@ export class Layout {
                 text: 'Home',
                 content: PageHome,
                 backgroud: 'white',
+            },
+            {
+                backgroud: 'grey',
+                text: 'Shop List',
+                content: PageShopList,
             },
             {
                 text: 'Services',
@@ -26,6 +33,12 @@ export class Layout {
                 text: 'Contact us',
                 content: PageContactUs,
             },
+            {
+                backgroud: 'grey',
+                text: 'Add new',
+                content: PageShopAddNew,
+                extraMenuStyle: 'btn',
+            },
         ];
         this.DOM = document.getElementById('app');
         this.mainDOM = null;
@@ -33,14 +46,15 @@ export class Layout {
         this.render();
         this.headerEvents();
 
-        new this.pagesData[0].content(this.mainDOM);
+        new this.pagesData[5].content(this.mainDOM);
     }
 
     header() {
 
         let navHTML = '';
         for (const link of this.pagesData) {
-            navHTML += `<button class="link">${link.text}</button>`
+            const style = link.extraMenuStyle ? link.extraMenuStyle : '';
+            navHTML += `<button class="link ${style}">${link.text}</button>`
         }
         return `
             <header class="container main-header">
