@@ -27,7 +27,13 @@ export class Layout {
                 content: PageContactUs,
             },
         ];
-        this.render()
+        this.DOM = document.getElementById('app');
+        this.mainDOM = null;
+
+        this.render();
+        this.headerEvents();
+
+        new this.pagesData[0].content(this.mainDOM);
     }
 
     header() {
@@ -51,37 +57,30 @@ export class Layout {
 
     headerEvents() {
         const buttonsDOM = document.querySelectorAll('.main-header-contnet .link');
-        const mainDOM = document.querySelector('main.container')
-        const titleDOM = document.querySelector('head title')
+        this.mainDOM = document.querySelector('main.container')
         for (let i = 0; i < buttonsDOM.length; i++) {
-            const buttonDOM = buttonsDOM[i];
             buttonsDOM[i].addEventListener('click', () => {
-                mainDOM.innerHTML = (new (this.pagesData[i].content)).render()
-                document.body.style.background = this.pagesData[i].backgroud;
-                titleDOM.textContent = this.pagesData[i].text;
+                const pageClass = this.pagesData[i].content;
+                new pageClass(this.mainDOM);
             })
         }
     }
 
     main() {
-
-        const HTML = `
+        return `
             <main class="container">
-            ${(new PageHome).render()}
+                Empty Content
             </main>`;
-        return HTML;
     }
 
     footer() {
-        const HTML = '<footer class="container">&copy; Copyright 2024</footer>';
-        return HTML;
+        return '<footer class="container">&copy; Copyright 2024</footer>';
     }
 
     render() {
-        const HTML = this.header() + this.main() + this.footer();
         const DOM = document.getElementById('app');
+        const HTML = this.header() + this.main() + this.footer();
 
         DOM.insertAdjacentHTML('beforeend', HTML);
-        this.headerEvents()
     }
 }

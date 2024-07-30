@@ -22,11 +22,11 @@ Site published at: https://vitalijuss.github.io/shop/
 ## ✅ Tasks
 
 -   [x] domo completed task
--   [] Layout render
-    -   [] header
-    -   [] main content
-    -   [] footer
--   [] navigation between pages
+-   [x] Layout render
+    -   [x] header
+    -   [x] main content
+    -   [x] footer
+-   [x] navigation between pages
 
 ## 🎅 Authors
 
