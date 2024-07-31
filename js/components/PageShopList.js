@@ -2,22 +2,54 @@ export class PageShopList {
     constructor(DOM) {
         this.DOM = DOM;
         this.render();
+        this.listEvents();
     }
+
+    listEvents() {
+        const rowsDOM = this.DOM.querySelectorAll('tbody > tr');
+        for (let i = 0; i < rowsDOM.length; i++) {
+            const buttonsDOM = rowsDOM[i].querySelectorAll('button');
+            const amountDOM = rowsDOM[i].querySelector('span');
+
+            buttonsDOM[2].addEventListener('click', () => {
+                const idToRemove = rowsDOM[i].id;
+                const localData = JSON.parse(localStorage.getItem('itemList'));
+                const data = localData.filter(item => item.id !== idToRemove);
+                localStorage.setItem('itemList', JSON.stringify(data));
+                rowsDOM[i].remove();
+            })
+            buttonsDOM[0].addEventListener('click', () => {
+                if (parseInt(amountDOM.textContent) > 1) {
+
+                    amountDOM.textContent = parseInt(amountDOM.textContent) - 1;
+                }
+            })
+            buttonsDOM[1].addEventListener('click', () => {
+                amountDOM.textContent = parseInt(amountDOM.textContent) + 1;
+            })
+
+        }
+    }
+
     render() {
+        const data = JSON.parse(localStorage.getItem('itemList'));
         let HTML = '';
-        const data = [
-            { title: 'Pomidoras', ammount: 2 },
-            { title: 'Agukas', ammount: 2 },
-            { title: 'Grietine', ammount: 1 },
-        ]
-        for (const item of data) {
-            HTML += `
-            <tr>
-                <td>${item.title}</td>
-                <td>${item.ammount}</td>
-                <td>Action</td>
-            </tr>
-            `
+        if (data) {
+            for (const item of data) {
+                HTML += `
+                <tr id="${item.id}">
+                    <td>${item.title}</td>
+                    <td>
+                        <button>-</button>
+                        <span>${item.amount}</span>
+                        <button>+</button>
+                    </td>
+                    <td>
+                        <button>Delete</button>
+                    </td>
+                </tr>
+                `
+            }
         }
 
         this.DOM.innerHTML = `

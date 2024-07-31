@@ -46,7 +46,7 @@ export class Layout {
         this.render();
         this.headerEvents();
 
-        new this.pagesData[5].content(this.mainDOM);
+        new this.pagesData[1].content(this.mainDOM);
     }
 
     header() {
