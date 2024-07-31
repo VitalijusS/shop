@@ -10,22 +10,29 @@ export class PageShopList {
         for (let i = 0; i < rowsDOM.length; i++) {
             const buttonsDOM = rowsDOM[i].querySelectorAll('button');
             const amountDOM = rowsDOM[i].querySelector('span');
+            const currentId = rowsDOM[i].id;
 
             buttonsDOM[2].addEventListener('click', () => {
-                const idToRemove = rowsDOM[i].id;
                 const localData = JSON.parse(localStorage.getItem('itemList'));
-                const data = localData.filter(item => item.id !== idToRemove);
+                const data = localData.filter(item => item.id !== currentId);
                 localStorage.setItem('itemList', JSON.stringify(data));
                 rowsDOM[i].remove();
             })
             buttonsDOM[0].addEventListener('click', () => {
-                if (parseInt(amountDOM.textContent) > 1) {
-
-                    amountDOM.textContent = parseInt(amountDOM.textContent) - 1;
+                const localData = JSON.parse(localStorage.getItem('itemList'));
+                if (localData.filter(item => item.id === currentId)[0].amount > 1) {
+                    const data = localData.map(item => item.id === currentId ?
+                        item.amount = { ...item, amount: item.amount - 1 } : item);
+                    localStorage.setItem('itemList', JSON.stringify(data));
+                    amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
                 }
             })
             buttonsDOM[1].addEventListener('click', () => {
-                amountDOM.textContent = parseInt(amountDOM.textContent) + 1;
+                const localData = JSON.parse(localStorage.getItem('itemList'));
+                const data = localData.map(item => item.id === currentId ? item.amount = { ...item, amount: item.amount + 1 } : item);
+                localStorage.setItem('itemList', JSON.stringify(data));
+                amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
+
             })
 
         }
