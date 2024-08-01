@@ -1,4 +1,4 @@
-# EDUHOUSE
+# SHOP
 
 _website design project_
 <br>
