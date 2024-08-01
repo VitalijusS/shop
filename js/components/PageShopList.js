@@ -5,36 +5,54 @@ export class PageShopList {
         this.listEvents();
     }
 
+    delete(rowDOM, buttonDOM) {
+        const currentId = rowDOM.id;
+        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const data = localData.filter(item => item.id !== currentId);
+        localStorage.setItem('itemList', JSON.stringify(data));
+        rowDOM.remove();
+    }
+    amountAdd(rowDOM, buttonDOM) {
+        const amountChange = +buttonDOM.dataset.step;
+        const amountDOM = rowDOM.querySelector('span');
+        const currentId = rowDOM.id;
+        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const data = localData.map(item => item.id === currentId ? item.amount = { ...item, amount: item.amount + amountChange } : item);
+        localStorage.setItem('itemList', JSON.stringify(data));
+        amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
+
+    }
+    amountMinus(rowDOM, buttonDOM) {
+        const amountChange = +buttonDOM.dataset.step;
+        const amountDOM = rowDOM.querySelector('span');
+        const currentId = rowDOM.id;
+        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const data = localData.map(item => item.id === currentId ?
+            item.amount = { ...item, amount: item.amount - amountChange > 0 ? (item.amount - amountChange) : 0 } : item);
+        localStorage.setItem('itemList', JSON.stringify(data));
+        amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
+
+
+    }
     listEvents() {
         const rowsDOM = this.DOM.querySelectorAll('tbody > tr');
-        for (let i = 0; i < rowsDOM.length; i++) {
-            const buttonsDOM = rowsDOM[i].querySelectorAll('button');
-            const amountDOM = rowsDOM[i].querySelector('span');
-            const currentId = rowsDOM[i].id;
+        // const funclist = [this.amountMinus, this.amountAdd, this.delete];
+        const funcList = {
+            'minus': this.amountMinus,
+            'plus': this.amountAdd,
+            'delete': this.delete,
+        };
 
-            buttonsDOM[2].addEventListener('click', () => {
-                const localData = JSON.parse(localStorage.getItem('itemList'));
-                const data = localData.filter(item => item.id !== currentId);
-                localStorage.setItem('itemList', JSON.stringify(data));
-                rowsDOM[i].remove();
-            })
-            buttonsDOM[0].addEventListener('click', () => {
-                const localData = JSON.parse(localStorage.getItem('itemList'));
-                if (localData.filter(item => item.id === currentId)[0].amount > 1) {
-                    const data = localData.map(item => item.id === currentId ?
-                        item.amount = { ...item, amount: item.amount - 1 } : item);
-                    localStorage.setItem('itemList', JSON.stringify(data));
-                    amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
-                }
-            })
-            buttonsDOM[1].addEventListener('click', () => {
-                const localData = JSON.parse(localStorage.getItem('itemList'));
-                const data = localData.map(item => item.id === currentId ? item.amount = { ...item, amount: item.amount + 1 } : item);
-                localStorage.setItem('itemList', JSON.stringify(data));
-                amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
+        for (const rowDOM of rowsDOM) {
+            const buttonsDOM = rowDOM.querySelectorAll('button');
 
-            })
 
+            for (const buttonDOM of buttonsDOM) {
+                buttonDOM.addEventListener('click', () => funcList[buttonDOM.dataset.method](rowDOM, buttonDOM))
+            }
+            // buttonsDOM[0].addEventListener('click', () => this.amountMinus(rowDOM))
+            // buttonsDOM[1].addEventListener('click', () => this.amountAdd(rowDOM))
+            // buttonsDOM[2].addEventListener('click', () => this.delete(rowDOM))
         }
     }
 
@@ -47,12 +65,14 @@ export class PageShopList {
                 <tr id="${item.id}">
                     <td>${item.title}</td>
                     <td>
-                        <button>-</button>
+                        <button data-method="minus" data-step="10" >-10</button>
+                        <button data-method="minus" data-step="1" >-1</button>
                         <span>${item.amount}</span>
-                        <button>+</button>
+                        <button data-method="plus" data-step="1" >+1</button>
+                        <button data-method="plus" data-step="10" >+10</button>
                     </td>
                     <td>
-                        <button>Delete</button>
+                        <button data-method="delete" data-step="1" >Delete</button>
                     </td>
                 </tr>
                 `
