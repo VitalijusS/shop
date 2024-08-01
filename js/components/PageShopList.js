@@ -1,13 +1,49 @@
 export class PageShopList {
     constructor(DOM) {
         this.DOM = DOM;
+        this.localStorageKey = 'itemList';
+
         this.render();
         this.listEvents();
+    }
+    readLocalStorage() {
+        const localStorageData = JSON.parse(localStorage.getItem('itemList'))
+        if (localStorageData === null) {
+            return [];
+        }
+        if (typeof localStorageData !== 'string' || localStorageData.length < 2) {
+            return [];
+        }
+
+        const data = JSON.parse(localStorageData)
+        const validData = [];
+        if (!Array.isArray(data)) {
+            return [];
+        }
+        for (const item of data) {
+            if (typeof item === 'object'
+                && item !== null
+                && !Array.isArray(item)
+                && Object.keys(item).length === 3
+                && item.id.length > 5
+                && typeof item.id === 'string'
+                && item.id.indexOf('item_') === 0
+                && isFinite(parseInt(item.id.slice(5)))
+                && item.title.trim().length > 0
+                && typeof item.title === 'string'
+                && typeof item.amount === 'number'
+                && isFinite(item.amount)
+                && item.amount >= 0
+            ) {
+                validData.push(item);
+            }
+        }
+        return validData;
     }
 
     delete(rowDOM, buttonDOM) {
         const currentId = rowDOM.id;
-        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const localData = this.readLocalStorage();
         const data = localData.filter(item => item.id !== currentId);
         localStorage.setItem('itemList', JSON.stringify(data));
         rowDOM.remove();
@@ -16,7 +52,7 @@ export class PageShopList {
         const amountChange = +buttonDOM.dataset.step;
         const amountDOM = rowDOM.querySelector('span');
         const currentId = rowDOM.id;
-        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const localData = this.readLocalStorage();
         const data = localData.map(item => item.id === currentId ? item.amount = { ...item, amount: item.amount + amountChange } : item);
         localStorage.setItem('itemList', JSON.stringify(data));
         amountDOM.textContent = data.filter(item => item.id === currentId)[0].amount;
@@ -26,7 +62,7 @@ export class PageShopList {
         const amountChange = +buttonDOM.dataset.step;
         const amountDOM = rowDOM.querySelector('span');
         const currentId = rowDOM.id;
-        const localData = JSON.parse(localStorage.getItem('itemList'));
+        const localData = this.readLocalStorage();
         const data = localData.map(item => item.id === currentId ?
             item.amount = { ...item, amount: item.amount - amountChange > 0 ? (item.amount - amountChange) : 0 } : item);
         localStorage.setItem('itemList', JSON.stringify(data));
